@@ -1,0 +1,5 @@
+.terraform
+build
+venv
+**/*.tfstate
+**/*.tfstate.backup
