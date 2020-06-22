@@ -1,5 +1,7 @@
 .terraform
+.idea
 build
 venv
 **/*.tfstate
 **/*.tfstate.backup
+**/*.tfstate.lock.info
