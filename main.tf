@@ -1,6 +1,6 @@
 locals {
   clean = "rm -rf ${path.module}/build/libs"
-  build = "pip install --upgrade pandas==${var.pandas_version} --target ${path.module}/build/libs/python/lib/python${var.python_version}/site-packages/."
+  build = "pip install --upgrade ${join(" ", var.libraries)} --target ${path.module}/build/libs/python/lib/python${data.external.python-version.result.version}/site-packages/."
 }
 
 resource null_resource default {
@@ -14,11 +14,15 @@ resource null_resource default {
 }
 
 data archive_file default {
-  output_path = "${path.module}/build/aws-lambda-pandas-layer-${null_resource.default.id}.zip"
+  output_path = "${path.module}/build/aws-lambda-python-layer-${null_resource.default.id}.zip"
   source_dir  = "${path.module}/build/libs"
   type        = "zip"
 
   depends_on  = [null_resource.default]
+}
+
+data external python-version {
+  program = ["bash", "${path.module}/python_version.sh"]
 }
 
 resource random_id default {
@@ -27,9 +31,9 @@ resource random_id default {
 
 resource aws_lambda_layer_version default {
   filename   = data.archive_file.default.output_path
-  layer_name = "pandas-${random_id.default.b64_url}"
+  layer_name = "python-layer-${random_id.default.b64_url}"
 
   compatible_runtimes = [
-    "python${var.python_version}"
+    "python${data.external.python-version.result.version}"
   ]
 }
