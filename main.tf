@@ -16,7 +16,7 @@ resource random_id default {
   byte_length = 8
 
   keepers = {
-    source_code_hash = data.archive_file.default.output_md5
+    source_code_hash = data.archive_file.default.output_base64sha256
   }
 }
 
