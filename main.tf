@@ -21,13 +21,8 @@ data archive_file default {
   depends_on  = [null_resource.default]
 }
 
-resource aws_s3_bucket default {
-  bucket = var.bucket
-  acl    = "private"
-}
-
 resource aws_s3_bucket_object default {
-  bucket = aws_s3_bucket.default.bucket
+  bucket = var.bucket
   source = data.archive_file.default.output_path
   key    = "python-layer-${random_id.default.b64_url}.zip"
 
@@ -43,7 +38,7 @@ resource random_id default {
 }
 
 resource aws_lambda_layer_version default {
-  s3_bucket  = aws_s3_bucket.default.bucket
+  s3_bucket  = var.bucket
   s3_key     = aws_s3_bucket_object.default.key
   layer_name = "python-layer-${random_id.default.b64_url}"
 
