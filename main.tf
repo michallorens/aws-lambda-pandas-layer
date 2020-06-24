@@ -1,9 +1,9 @@
-data external python-version {
-  program = ["bash", "${path.module}/python_version.sh"]
+locals {
+  docker_image = "docker.pkg.github.com/michallorens/aws-lambda-python-layer/${var.python_version}:latest"
 }
 
 data external pip-install {
-  program = concat(["bash", "${path.module}/pip_install.sh", data.external.python-version.result.version], var.libraries)
+  program = concat(["bash", "${path.module}/run_docker.sh", local.docker_image], var.libraries)
 }
 
 data archive_file default {
@@ -32,6 +32,6 @@ resource aws_lambda_layer_version default {
   layer_name = "python-layer-${random_id.default.b64_url}"
 
   compatible_runtimes = [
-    "python${data.external.python-version.result.version}"
+    var.python_version
   ]
 }
