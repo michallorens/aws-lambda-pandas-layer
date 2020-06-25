@@ -6,12 +6,6 @@ data external pip-install {
   program = concat(["bash", "${path.module}/run_docker.sh", local.docker_image], var.libraries)
 }
 
-data archive_file default {
-  output_path = "${path.module}/build/aws-lambda-python-layer.zip"
-  source_dir  = data.external.pip-install.result.path
-  type        = "zip"
-}
-
 resource random_id default {
   byte_length = 8
 
@@ -22,7 +16,7 @@ resource random_id default {
 
 resource aws_s3_bucket_object default {
   bucket = var.bucket
-  source = data.archive_file.default.output_path
+  source = data.external.pip-install.result.path
   key    = "python-layer-${random_id.default.b64_url}.zip"
 }
 

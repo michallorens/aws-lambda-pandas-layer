@@ -11,5 +11,5 @@ variable bucket {
 variable python_version {
   type        = string
   description = "Python version to build lambda layer with."
-  default     = "python3.8"
+  default     = "python3.7"
 }
