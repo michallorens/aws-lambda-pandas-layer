@@ -7,7 +7,7 @@ data external pip-install {
 }
 
 resource random_id default {
-  byte_length = 8
+  byte_length = 16
 
   keepers = {
     libraries = join(", ", sort(var.libraries))
