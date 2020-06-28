@@ -13,3 +13,17 @@ variable python_version {
   description = "Python version to build lambda layer with."
   default     = "python3.7"
 }
+
+variable tags {
+  type = object({
+    environment = string
+    application = string
+    owner = string
+  })
+  description = "Tags for deployed resources"
+  default = {
+    environment = "development"
+    application = "lambda-layer"
+    owner       = "michal.lorens@datafeedwatch.com"
+  }
+}
